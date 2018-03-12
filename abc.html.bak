@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html ng-app="app">
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript" src="js/angular.js" ></script>
+	</head>
+	<body>
+		 <div ng-controller="ctr">
+		 	 名字: <input type="text" ng-model="emp.ename"/>
+		 	 日期: <input type="date" ng-model="emp.edate"/>
+		 	 部门: <select ng-model="emp.did">
+		 	 	
+		 	 	 
+		 	 	
+		 	 </select>
+		 	 <button ng-click="addEmp()"></button>
+		 	 <table border="1px">
+		 	 	 <tr ng-repeat="x in data">
+		 	 	 	<!--ng-bind 和{{}}-->
+		 	 	 	 <td ng-bind="x.eid"></td>
+		 	 	 	 <td ng-bind="x.ename"></td>
+		 	 	 	 <td ng-bind="x.did"></td>
+		 	 	 	 <td><button ng-click="deleteEmp(x.eid)">删除</button></td>
+		 	 	 </tr>
+		 	 	
+		 	 </table>
+		 	
+		 </div>
+		
+		<script>
+			var app= angular.module("app",[]);
+			app.controller("ctr",function($scope,$http){
+				$http({
+					url:"http://localhost:8080/angularjs-ssh/list",
+					method:"post"
+				}).then(function(response){
+					//alert(123);
+					$scope.data=response.data;
+				},function(){
+					alert(234);
+				});
+				
+				
+				$scope.addEmp=function(){
+					$http({
+						url:"abc",
+						params:$scope.emp
+					})
+				}
+				
+				$scope.deleteEmp=function(x){
+					//alert(x);
+					$http({
+						url:"http://localhost:8080/angularjs-ssh/delete/"+x,
+						method:"post"
+					}).then(function(response){
+						 //location.reload();
+						var arr =new Array();
+						 console.log($scope.data);
+					/*	  for(var i=0;i<$scope.data.length;i++){
+						 	//alert(x1.eid==x);
+						 	console.log($scope.data[i].eid+":"+x);
+						 	if($scope.data[i].eid!=x){
+						 		arr.push($scope.data[i]);
+						 	}
+						 	
+						 }
+						 console.log(arr);
+						 $scope.data=arr;*/
+						/*
+						  js数组原生方法过滤
+						  some,every map spice splice 
+						 * */
+						  arr=$scope.data.filter(function(a,b){
+						  	//console.log(a+"  "+b);
+						  	if(a.eid!=x){
+						  		return a;
+						  	}
+						  });
+						 console.log("过滤后的结果:"+arr);
+						 $scope.data=arr;
+						 
+						// alert(123);
+					},function(){
+						alert(234);
+					})
+				}
+				
+				
+			});
+			
+			
+		</script>
+		
+	</body>
+</html>
